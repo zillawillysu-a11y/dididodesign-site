@@ -108,6 +108,14 @@
   @media (max-width:720px){.fullindex li a{grid-template-columns:3.6em 1fr;gap:2px 12px}.fullindex .sh{grid-column:2}.fullindex .go{display:none}}
 
 
+  .fullindex li.old{display:none}
+  .fullindex ol.open li.old{display:block}
+  .fullindex li.more button{background:none;border:0;border-bottom:1px solid var(--faint);width:100%;text-align:left;
+     padding:16px 0;color:var(--ink);font:inherit;font-size:15px;cursor:pointer}
+  .fullindex li.more button:hover{color:var(--amber)}
+  .fullindex aside img{transition:opacity .12s}
+  .fullindex aside img.wait{opacity:0}
+
   /* ---------- about ---------- */
   .about{display:grid;grid-template-columns:1fr 1fr;gap:var(--pad);padding:clamp(72px,12vh,140px) var(--pad);border-top:1px solid var(--faint)}
   .about h2{font-size:13px;font-weight:400;color:var(--dim)}
@@ -282,7 +290,11 @@ grid.innerHTML = PROJECTS.map(p => `
     </div>
   </a>`).join('');
 document.getElementById('artists').innerHTML = ARTISTS.map(a=>`<li>${a}</li>`).join('');
-document.getElementById('list').innerHTML = SHOWS.map(([y,a,sh,id])=>`<li><a data-id="${id}" href="${P}${id}/" target="_blank" rel="noopener"><span class="y">${y}</span><span class="ar">${a}</span><span class="sh">${sh}</span></a></li>`).join('');
+const RECENT = Math.max(...SHOWS.map(r=>+r[0])) - 1;
+const older = SHOWS.filter(r=>+r[0] < RECENT).length;
+document.getElementById('list').innerHTML = SHOWS.map(([y,a,sh,id])=>`<li${+y < RECENT ? ' class="old"' : ''}><a data-id="${id}" href="${P}${id}/" target="_blank" rel="noopener"><span class="y">${y}</span><span class="ar">${a}</span><span class="sh">${sh}</span></a></li>`).join('') + (older ? `<li class="more"><button type="button" id="moreBtn">And more (${older})</button></li>` : '');
+const moreBtn=document.getElementById('moreBtn');
+if(moreBtn) moreBtn.addEventListener('click',()=>{document.getElementById('list').classList.add('open');moreBtn.parentElement.remove();});
 document.getElementById('count3').textContent = SHOWS.length + ' shows';
 document.getElementById('count').textContent = SHOWS.length;
 document.getElementById('count2').textContent = PROJECTS.length + ' of ' + SHOWS.length;
@@ -309,13 +321,23 @@ nav.querySelectorAll('ul a').forEach(a => a.addEventListener('click', () => { na
 (() => {
   if (!matchMedia('(hover:hover) and (min-width:721px)').matches) return;
   const img = document.getElementById('peek'), cap = document.getElementById('peekcap');
-  const show = r => { img.src = `images/thumbs/${r[3]}.jpg`; cap.textContent = `${r[1]} — ${r[2]}, ${r[0]}`; };
+  const cache = {};
+  const load = id => cache[id] || (cache[id] = (() => { const i = new Image(); i.src = `images/thumbs/${id}.jpg`; i.ready = i.decode().catch(()=>{}); return i; })());
+  let current = null;
+  const show = r => {
+    current = r[3];
+    cap.textContent = `${r[1]} — ${r[2]}, ${r[0]}`;
+    const c = load(r[3]);
+    if (c.complete && c.naturalWidth) { img.src = c.src; img.classList.remove('wait'); return; }
+    img.classList.add('wait');
+    c.ready.then(() => { if (current === r[3]) { img.src = c.src; img.classList.remove('wait'); } });
+  };
   show(SHOWS[0]);
-  new IntersectionObserver((es, o) => { if (es[0].isIntersecting) { o.disconnect();
-    SHOWS.forEach(r => { new Image().src = `images/thumbs/${r[3]}.jpg`; }); } }, {rootMargin:'400px'})
-    .observe(document.getElementById('list'));
+  const warm = () => { let k = 0; const step = () => { const end = Math.min(k + 4, SHOWS.length);
+      for (; k < end; k++) load(SHOWS[k][3]); if (k < SHOWS.length) setTimeout(step, 250); }; step(); };
+  if (document.readyState === 'complete') setTimeout(warm, 800); else addEventListener('load', () => setTimeout(warm, 800));
   document.getElementById('list').addEventListener('mouseover', e => {
-    const a = e.target.closest('a[data-id]'); if (!a) return;
+    const a = e.target.closest('a[data-id]'); if (!a || a.dataset.id === current) return;
     const r = SHOWS.find(x => x[3] === a.dataset.id); if (r) show(r);
   });
 })();
