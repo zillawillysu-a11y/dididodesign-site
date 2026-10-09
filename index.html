@@ -89,6 +89,17 @@
   .artists li::after{content:" /";color:var(--faint)}
   .artists li:last-child::after{content:""}
 
+  .fullindex{padding-bottom:clamp(72px,12vh,140px)}
+  .fullindex ol{list-style:none;padding:0 var(--pad)}
+  .fullindex li a{display:grid;grid-template-columns:4.5em minmax(0,1.1fr) minmax(0,1.4fr) auto;gap:16px;align-items:baseline;
+     padding:13px 0;border-bottom:1px solid var(--faint);font-size:15px;transition:color .15s}
+  .fullindex li a:hover{color:var(--amber)}
+  .fullindex .y{color:var(--dim);font-variant-numeric:tabular-nums}
+  .fullindex .ar{font-weight:600;font-stretch:108%}
+  .fullindex .sh{color:var(--dim)}
+  .fullindex .go{color:var(--dim);font-size:13px}
+  @media (max-width:720px){.fullindex li a{grid-template-columns:3.6em 1fr;gap:2px 12px}.fullindex .sh{grid-column:2}.fullindex .go{display:none}}
+
   /* ---------- about ---------- */
   .about{display:grid;grid-template-columns:1fr 1fr;gap:var(--pad);padding:clamp(72px,12vh,140px) var(--pad);border-top:1px solid var(--faint)}
   .about h2{font-size:13px;font-weight:400;color:var(--dim)}
@@ -140,9 +151,14 @@
     <h1>DiDiDo Design <span class="d">— lighting design studio <span class="nw">from Taiwan.</span> Concerts, theatre and live shows.</span></h1>
   </section>
 
-  <section id="index" aria-label="Index">
-    <div class="label"><span>( index )</span><span id="count2"></span></div>
+  <section id="work" aria-label="Selected work">
+    <div class="label"><span>( selected work )</span><span id="count2"></span></div>
     <div class="index" id="grid"></div>
+  </section>
+
+  <section class="fullindex" id="index" aria-label="Index">
+    <div class="label"><span>( index )</span><span id="count3"></span></div>
+    <ol id="list"></ol>
   </section>
 
   <section class="artists" aria-label="Artists">
@@ -192,7 +208,53 @@ const PROJECTS = [
   { code:"D08", title:"No Party For Cao Dong", client:"Festival show", year:"2023", role:"Lighting Design", credit:"Photo @nopartyforcaodong", images:["images/caodong.jpg"] },
 ];
 
-const ARTISTS = ["Amazing Show","Tanya Chua","Cheer Chen","No Party For Cao Dong","Enno Cheng","deca joins","Lexie Liu","Karencici","The Crane","The LifeJourney","someshiit","Same Sam But Different","Gummy B","Astro Bunny","Song of Crane","DEW","Flowstrong","Peggy Hsu","KIRE","Ardor Huang","Kumachan","Nosu","Modern Cinema Master","SAX MACHINE"];
+const P="https://www.instagram.com/dididodesign/p/";
+const SHOWS = [
+  ["2026","SAX MACHINE","Jam Jam Asia — SUB","DctJc96gUjr"],
+  ["2026","The Crane","Jam Jam Asia — Legacy Tera","Dcsr9MUkQPh"],
+  ["2026","Kumachan","Legacy Taipei","DbKV6ZpE4tL"],
+  ["2026","Enno Cheng","Inter-Phases — Legacy Tera","Da-wB_JE0Sm"],
+  ["2026","DEW","Airplane Mode — The Wall Live House","DZZ6WFCk7zi"],
+  ["2026","Amazing Show","AS= =+ 10th Anniversary Concert","DY5_UgSk4cu"],
+  ["2026","deca joins","World Tour","DYKmIrEExDN"],
+  ["2026","Tanya Chua","Into The B-Sides — Zepp New Taipei","DWyCXE7kzF2"],
+  ["2026","Same Sam But Different","Megaport Festival","DWRPqpdk9_L"],
+  ["2026","Gummy B","Legacy Taichung, Kaohsiung Live Warehouse","DUmyu2_k2pY"],
+  ["2026","Astro Bunny","Zepp New Taipei","DUa5vjLk99o"],
+  ["2026","Flowstrong","Taipei","DUa4nnzk0nB"],
+  ["2026","Song of Crane","Glow — Zepp New Taipei","DTZcS7Ek_oZ"],
+  ["2025","Nosu","THE LIFT CONCERT — The Wall Live House","DS7EwWxEzMi"],
+  ["2025","Peggy Hsu","Frozen Star — Sub Live","DS2No5-k78Q"],
+  ["2025","Wayne's So Sad","Legacy Tera","DS2CAsgk31-"],
+  ["2025","Gummy B","Legacy Tera","DRMy5hokzhV"],
+  ["2025","someshiit","Legacy Taipei","DRMor_CEzR-"],
+  ["2025","Lily Chou-Chou Lied","Taipei Calling","DQkGw2Kk_Pc"],
+  ["2025","Cheer Chen","Taipei Calling","DQi_4gHk7L4"],
+  ["2025","someshiit","Festival show","DP-3_Yqk7ds"],
+  ["2025","The LifeJourney","Beijing","DPJESnvE34x"],
+  ["2025","The LifeJourney","Next Stop — Xiamen","DO5SN6DkyfI"],
+  ["2025","3 Aqua Production","Musical readings — Nanchun Theater","DODW3zGE1Sm"],
+  ["2025","Song of Crane","Legacy Taichung","DODVszxEwpg"],
+  ["2025","deca joins","Jam Jam Asia","DOAzUjFkwTU"],
+  ["2025","3 Aqua Production","The OB Idol (musical)","DLzSZP6TcW4"],
+  ["2025","The LifeJourney","20th Anniversary Concert","DLxcLzQzO2S"],
+  ["2025","someshiit","GMA Showcase","DLbzlTbzUKq"],
+  ["2025","Modern Cinema Master","GMA Showcase","DLbr1_5TSFo"],
+  ["2025","Ardor Huang","Live show","DKJvWNzz6wR"],
+  ["2025","Karencici","MADE FOR YOU","DI8b5TDTRvH"],
+  ["2025","Lily Chou-Chou Lied","Megaport Festival","DH3-8OETy9w"],
+  ["2025","someshiit","Megaport Festival","DH05pmjT5cY"],
+  ["2025","Astro Bunny","Falling — music video","DHY3CyoTatM"],
+  ["2025","KIRE","EROS — Legacy Taipei","DG8rItkT-2O"],
+  ["2025","Bremen Entertainment","Legacy Taipei","DG8mWRNThRV"],
+  ["2025","Lexie Liu","Arena, Taipei","DEhktD6TWG5"],
+  ["2024","Lexie Liu","Nanjing, Chengdu","DEZW90MTEmF"],
+  ["2024","The Crane","Meet Me At The Dining Room","DDbzNmbTbLD"],
+  ["2024","Lily Chou-Chou Lied","The Wall","C_3qyiCzQI2"],
+  ["2024","Astro Bunny","Concert","C6BI1AkPrUD"],
+  ["2023","No Party For Cao Dong","Festival show","CzLOlw6LNKn"],
+];
+const ARTISTS = [...new Set(SHOWS.map(s=>s[1]).filter(a=>!/Production|Entertainment/.test(a)))];
 
 function slot(src, i, p){
   if (src) return `<img src="${src}" alt="${p.title}" loading="lazy">`;
@@ -209,8 +271,10 @@ grid.innerHTML = PROJECTS.map(p => `
     </div>
   </a>`).join('');
 document.getElementById('artists').innerHTML = ARTISTS.map(a=>`<li>${a}</li>`).join('');
-document.getElementById('count').textContent = PROJECTS.length;
-document.getElementById('count2').textContent = PROJECTS.length + ' projects';
+document.getElementById('list').innerHTML = SHOWS.map(([y,a,sh,id])=>`<li><a href="${P}${id}/" target="_blank" rel="noopener"><span class="y">${y}</span><span class="ar">${a}</span><span class="sh">${sh}</span><span class="go">Instagram</span></a></li>`).join('');
+document.getElementById('count3').textContent = SHOWS.length + ' shows';
+document.getElementById('count').textContent = SHOWS.length;
+document.getElementById('count2').textContent = PROJECTS.length + ' of ' + SHOWS.length;
 
 const hero = PROJECTS.find(p => p.hero);
 const media = document.getElementById('heroMedia');
