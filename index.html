@@ -1,0 +1,233 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>DiDiDo Design</title>
+<meta name="description" content="DiDiDo Design — lighting design studio from Taipei. Lighting design, previsualization and grandMA3 programming for concerts, theatre and live shows.">
+<meta name="theme-color" content="#050505">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wdth,wght@62..125,300..800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#050505;
+    --ink:#ECEAE4;
+    --dim:#8B8A86;
+    --faint:#3A3936;
+    --amber:#E9B45C;
+    --pad:clamp(16px,2.4vw,32px);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{background:var(--bg);color:var(--ink);font-family:"Archivo",system-ui,sans-serif;
+       font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+  a{color:inherit;text-decoration:none}
+  a:focus-visible,button:focus-visible{outline:1px solid var(--amber);outline-offset:4px}
+  img,video{display:block;width:100%;height:100%;object-fit:cover}
+
+  /* ---------- header ---------- */
+  header{position:fixed;inset:0 0 auto 0;z-index:20;display:flex;justify-content:space-between;align-items:flex-start;
+         padding:var(--pad);mix-blend-mode:difference;color:#fff}
+  .mark{font-weight:700;font-stretch:115%;letter-spacing:-.01em;font-size:15px;line-height:1.2}
+  .mark span{display:block;font-weight:400;font-stretch:100%;font-size:13px;opacity:.75}
+  nav ul{list-style:none;display:flex;gap:28px;font-size:13px}
+  nav li a{display:flex;gap:8px}
+  nav li a b{font-weight:400;opacity:.55;font-variant-numeric:tabular-nums}
+  nav li a:hover b{opacity:1}
+  .menu-btn{display:none;background:none;border:0;color:inherit;font:inherit;font-size:13px;cursor:pointer}
+  @media (max-width:720px){
+    nav ul{display:none;position:absolute;right:var(--pad);top:52px;flex-direction:column;gap:10px;text-align:right}
+    nav.open ul{display:flex}
+    nav li a{justify-content:flex-end}
+    .menu-btn{display:block}
+  }
+
+  /* ---------- hero ---------- */
+  .hero{position:relative;height:100svh;min-height:560px;overflow:hidden;background:#000}
+  .hero-media{position:absolute;inset:0}
+  .hero-media picture{display:block;width:100%;height:100%}
+  .hero-cap{position:absolute;left:var(--pad);right:var(--pad);bottom:var(--pad);display:flex;justify-content:space-between;align-items:flex-end;gap:24px;z-index:2}
+  .hero-cap h2{font-weight:700;font-stretch:120%;font-size:clamp(34px,6.5vw,92px);line-height:.92;letter-spacing:-.02em}
+  .hero-cap p{color:#C9C7C1;font-size:13px;margin-top:10px;max-width:40ch}
+  .scroll{font-size:13px;color:#C9C7C1;white-space:nowrap}
+  .hero::after{content:"";position:absolute;inset:auto 0 0 0;height:40%;background:linear-gradient(transparent,rgba(0,0,0,.7));z-index:1}
+
+
+  /* ---------- intro ---------- */
+  .intro{padding:clamp(96px,16vh,180px) var(--pad) clamp(72px,12vh,140px)}
+  .intro h1{font-weight:500;font-stretch:105%;font-size:clamp(30px,4.6vw,64px);line-height:1.08;letter-spacing:-.015em;max-width:20ch}
+  .intro h1 .d{color:var(--dim)}
+  .intro .zh{display:block;margin-top:28px;color:var(--dim);font-size:clamp(15px,1.4vw,18px);font-weight:300;max-width:34em;line-height:1.8}
+
+  /* ---------- index ---------- */
+  .label{display:flex;justify-content:space-between;padding:0 var(--pad) 14px;font-size:13px;color:var(--dim);border-bottom:1px solid var(--faint)}
+  .index{display:grid;grid-template-columns:repeat(2,1fr);gap:clamp(40px,6vw,88px) var(--pad);padding:28px var(--pad) clamp(96px,14vh,160px)}
+  .proj{display:block}
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:6px;aspect-ratio:3/2;overflow:hidden}
+  .pair.one{grid-template-columns:1fr}
+  .pair > div{position:relative;overflow:hidden;background:#111}
+  .pair img{transition:transform .8s cubic-bezier(.2,.7,.2,1)}
+  .proj:hover .pair img{transform:scale(1.035)}
+  .meta{display:grid;grid-template-columns:auto 1fr auto;gap:14px;margin-top:14px;font-size:13px;align-items:baseline}
+  .meta .code{color:var(--dim);font-variant-numeric:tabular-nums}
+  .meta h3{font-weight:600;font-size:16px;font-stretch:108%}
+  .meta h3 small{display:block;font-weight:400;font-stretch:100%;font-size:13px;color:var(--dim)}
+  .meta .yr{color:var(--dim)}
+  .proj:nth-child(4n+2),.proj:nth-child(4n+3){}
+  @media (min-width:721px){.proj:nth-child(even){margin-top:clamp(60px,10vw,160px)}}
+  @media (max-width:720px){.index{grid-template-columns:1fr}}
+
+  /* placeholder photo slot */
+  .ph{position:absolute;inset:0;display:flex;align-items:flex-end;padding:10px;font-size:11px;color:#55544F;background:#111}
+
+  .meta h3 small.cr{font-size:11px;color:#5E5D59;margin-top:2px}
+  .artists{padding-bottom:clamp(72px,12vh,140px)}
+  .artists ul{list-style:none;display:flex;flex-wrap:wrap;gap:.1em .5em;padding:28px var(--pad) 0;
+     font-weight:600;font-stretch:112%;font-size:clamp(24px,3.4vw,46px);line-height:1.2;letter-spacing:-.015em}
+  .artists li::after{content:" /";color:var(--faint)}
+  .artists li:last-child::after{content:""}
+
+  /* ---------- about ---------- */
+  .about{display:grid;grid-template-columns:1fr 1fr;gap:var(--pad);padding:clamp(72px,12vh,140px) var(--pad);border-top:1px solid var(--faint)}
+  .about h2{font-size:13px;font-weight:400;color:var(--dim)}
+  .about p.big{font-size:clamp(20px,2.2vw,28px);line-height:1.35;font-weight:400;letter-spacing:-.005em;max-width:26ch}
+  .about p.sub{color:var(--dim);margin-top:18px;font-weight:300;line-height:1.8;max-width:30em}
+  .svc{list-style:none;margin-top:40px;border-top:1px solid var(--faint)}
+  .svc li{display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-bottom:1px solid var(--faint);font-size:15px}
+  .svc li span:last-child{color:var(--dim)}
+  @media (max-width:720px){.about{grid-template-columns:1fr}}
+
+  /* ---------- footer / contact ---------- */
+  footer{padding:clamp(72px,12vh,140px) var(--pad) var(--pad);border-top:1px solid var(--faint)}
+  footer h2{font-size:13px;font-weight:400;color:var(--dim);margin-bottom:18px}
+  .mail{display:inline-block;font-weight:700;font-stretch:120%;font-size:clamp(28px,6.4vw,104px);line-height:1;letter-spacing:-.025em;word-break:break-all}
+  .mail:hover{color:var(--amber)}
+  .foot{display:flex;flex-wrap:wrap;justify-content:space-between;gap:12px 32px;margin-top:clamp(56px,10vh,120px);font-size:13px;color:var(--dim)}
+  .foot a:hover{color:var(--ink)}
+
+  @media (prefers-reduced-motion:reduce){.pair img{transition:none}}
+</style>
+</head>
+<body>
+
+<header>
+  <a class="mark" href="#top">DiDiDo Design<span>Lighting Design Studio</span></a>
+  <nav id="nav">
+    <button class="menu-btn" aria-expanded="false" aria-controls="menu">Menu</button>
+    <ul id="menu">
+      <li><a href="#about"><b>001</b>About</a></li>
+      <li><a href="#index"><b>002</b><span>Index (<span id="count">0</span>)</span></a></li>
+      <li><a href="#contact"><b>003</b>Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="top">
+  <section class="hero" aria-label="Featured">
+    <div class="hero-media" id="heroMedia"></div>
+    <div class="hero-cap">
+      <div>
+        <h2 id="heroTitle">DiDiDo Design</h2>
+        <p id="heroSub">Lighting Design, Previsualization, Programming</p>
+      </div>
+      <a class="scroll" href="#intro">Scroll</a>
+    </div>
+  </section>
+
+  <section class="intro" id="intro">
+    <h1>DiDiDo Design <span class="d">— lighting design studio from Taipei. Concerts, theatre and live shows.</span></h1>
+  </section>
+
+  <section id="index" aria-label="Index">
+    <div class="label"><span>( index )</span><span id="count2"></span></div>
+    <div class="index" id="grid"></div>
+  </section>
+
+  <section class="artists" aria-label="Artists">
+    <div class="label"><span>( artists )</span><span></span></div>
+    <ul id="artists"></ul>
+  </section>
+
+  <section class="about" id="about">
+    <div><h2>( about )</h2></div>
+    <div>
+      <p class="big">A small studio that designs light for live shows, and builds its own tools to run them.</p>
+      <p class="sub">Two people, from the drawing to show day. Alongside design and operation we write our own console plugins, cue and playback software, and follow-spot tools, so rehearsals move faster and shows run steadier.</p>
+      <ul class="svc">
+        <li><span>Lighting design</span><span>Drawings and rig plans</span></li>
+        <li><span>Previsualization</span><span>3D before load-in</span></li>
+        <li><span>Programming</span><span>grandMA3</span></li>
+        <li><span>Show operation</span><span>On site</span></li>
+        <li><span>Show tools</span><span>Built in-house</span></li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<footer id="contact">
+  <h2>( contact )</h2>
+  <a class="mail" href="mailto:willysu@dididodesign.com">willysu@dididodesign.com</a>
+  <div class="foot">
+    <a href="https://www.instagram.com/dididodesign" target="_blank" rel="noopener">Instagram @dididodesign</a>
+    <span>Taipei, Taiwan</span>
+    <span>© 2026 DiDiDo Design Co., Ltd.</span>
+  </div>
+</footer>
+
+<script>
+/* ===========================================================
+   Projects: Photos go in images/, filenames below.
+   The entry with hero:true fills the top banner. video: accepts an mp4.
+   =========================================================== */
+const PROJECTS = [
+  { code:"D01", title:"Amazing Show", client:"AS= =+ 10th Anniversary Concert", year:"2026", role:"Lighting Design", credit:"Photos courtesy of Amazing Show", images:["images/amazingshow.jpg"] },
+  { code:"D02", title:"Enno Cheng", client:"Inter-Phases — Legacy Tera", year:"2026", role:"Lighting Design", credit:"Photo @samchangraphy", images:["images/enno-1.jpg","images/enno-2.jpg"] },
+  { code:"D03", title:"deca joins", client:"World Tour", year:"2026", role:"Lighting Design", credit:"Photo @y.ti_", images:["images/deca-1.jpg","images/deca-2.jpg"], heroImage:"images/hero-deca.jpg", heroImagePortrait:"images/hero-deca-portrait.jpg", hero:true },
+  { code:"D04", title:"The Crane", client:"Jam Jam Asia — Legacy Tera", year:"2026", role:"Lighting Design", credit:"", images:["images/crane-1.jpg","images/crane-2.jpg"] },
+  { code:"D05", title:"The LifeJourney", client:"20th Anniversary Concert", year:"2025", role:"Lighting Design", credit:"", images:["images/lifejourney.jpg"] },
+  { code:"D06", title:"Karencici", client:"MADE FOR YOU", year:"2025", role:"Lighting Design", credit:"", images:["images/karencici.jpg"] },
+  { code:"D07", title:"Lexie Liu", client:"Arena, Taipei", year:"2025", role:"Lighting Design", credit:"Photo @luckyluckysuck @fbbrook", images:["images/lexie-1.jpg","images/lexie-2.jpg"] },
+  { code:"D08", title:"No Party For Cao Dong", client:"Festival show", year:"2023", role:"Lighting Design", credit:"Photo @nopartyforcaodong", images:["images/caodong.jpg"] },
+];
+
+const ARTISTS = ["Amazing Show","Tanya Chua","Cheer Chen","No Party For Cao Dong","Enno Cheng","deca joins","Lexie Liu","Karencici","The Crane","The LifeJourney","someshiit","Same Sam But Different","Gummy B","Astro Bunny","Song of Crane","DEW","Flowstrong","Peggy Hsu","KIRE","Ardor Huang","Kumachan","Nosu","Modern Cinema Master","SAX MACHINE"];
+
+function slot(src, i, p){
+  if (src) return `<img src="${src}" alt="${p.title}" loading="lazy">`;
+  return `<div class="ph" style="--x:${i?70:30}%">photo</div>`;
+}
+const grid = document.getElementById('grid');
+grid.innerHTML = PROJECTS.map(p => `
+  <a class="proj" ${p.link ? `href="${p.link}" target="_blank" rel="noopener"` : `href="https://www.instagram.com/dididodesign" target="_blank" rel="noopener"`}>
+    <div class="pair${p.images.length===1?' one':''}">${p.images.map((src,i)=>`<div>${slot(src,i,p)}</div>`).join('')}</div>
+    <div class="meta">
+      <span class="code">${p.code}</span>
+      <h3>${p.title}<small>${p.client}</small>${p.credit?`<small class="cr">${p.credit}</small>`:''}</h3>
+      <span class="yr">${p.year}</span>
+    </div>
+  </a>`).join('');
+document.getElementById('artists').innerHTML = ARTISTS.map(a=>`<li>${a}</li>`).join('');
+document.getElementById('count').textContent = PROJECTS.length;
+document.getElementById('count2').textContent = PROJECTS.length + ' projects';
+
+const hero = PROJECTS.find(p => p.hero);
+const media = document.getElementById('heroMedia');
+if (hero && hero.video) {
+  media.innerHTML = `<video src="${hero.video}" autoplay muted loop playsinline></video>`;
+} else if (hero && (hero.heroImage||hero.images[0])) {
+  media.innerHTML = `<picture>${hero.heroImagePortrait?`<source media="(orientation: portrait)" srcset="${hero.heroImagePortrait}">`:''}<img src="${hero.heroImage||hero.images[0]}" alt="${hero.title}" fetchpriority="high"></picture>`;
+} else {
+  media.innerHTML = '';
+}
+if (hero && (hero.heroImage||hero.images[0])) {
+  document.getElementById('heroTitle').textContent = hero.title;
+  document.getElementById('heroSub').textContent = `${hero.role} — ${hero.client} ${hero.year}`;
+}
+
+const nav = document.getElementById('nav'), btn = nav.querySelector('.menu-btn');
+btn.addEventListener('click', () => { const o = nav.classList.toggle('open'); btn.setAttribute('aria-expanded', o); });
+nav.querySelectorAll('ul a').forEach(a => a.addEventListener('click', () => { nav.classList.remove('open'); btn.setAttribute('aria-expanded', false); }));
+</script>
+</body>
+</html>
