@@ -168,7 +168,6 @@
   </section>
 
   <section id="work" aria-label="Selected work">
-    <div class="label"><span>( selected work )</span><span id="count2"></span></div>
     <div class="index" id="grid"></div>
   </section>
 
@@ -297,7 +296,6 @@ const moreBtn=document.getElementById('moreBtn');
 if(moreBtn) moreBtn.addEventListener('click',()=>{document.getElementById('list').classList.add('open');moreBtn.parentElement.remove();});
 document.getElementById('count3').textContent = SHOWS.length + ' shows';
 document.getElementById('count').textContent = SHOWS.length;
-document.getElementById('count2').textContent = PROJECTS.length + ' of ' + SHOWS.length;
 
 const hero = PROJECTS.find(p => p.hero);
 const media = document.getElementById('heroMedia');
