@@ -289,9 +289,9 @@ grid.innerHTML = PROJECTS.map(p => `
     </div>
   </a>`).join('');
 document.getElementById('artists').innerHTML = ARTISTS.map(a=>`<li>${a}</li>`).join('');
-const RECENT = Math.max(...SHOWS.map(r=>+r[0])) - 1;
-const older = SHOWS.filter(r=>+r[0] < RECENT).length;
-document.getElementById('list').innerHTML = SHOWS.map(([y,a,sh,id])=>`<li${+y < RECENT ? ' class="old"' : ''}><a data-id="${id}" href="${P}${id}/" target="_blank" rel="noopener"><span class="y">${y}</span><span class="ar">${a}</span><span class="sh">${sh}</span></a></li>`).join('') + (older ? `<li class="more"><button type="button" id="moreBtn">And more (${older})</button></li>` : '');
+const SHOW_FIRST = 15;
+const older = Math.max(0, SHOWS.length - SHOW_FIRST);
+document.getElementById('list').innerHTML = SHOWS.map(([y,a,sh,id],i)=>`<li${i >= SHOW_FIRST ? ' class="old"' : ''}><a data-id="${id}" href="${P}${id}/" target="_blank" rel="noopener"><span class="y">${y}</span><span class="ar">${a}</span><span class="sh">${sh}</span></a></li>`).join('') + (older ? `<li class="more"><button type="button" id="moreBtn">And more (${older})</button></li>` : '');
 const moreBtn=document.getElementById('moreBtn');
 if(moreBtn) moreBtn.addEventListener('click',()=>{document.getElementById('list').classList.add('open');moreBtn.parentElement.remove();});
 document.getElementById('count3').textContent = SHOWS.length + ' shows';
