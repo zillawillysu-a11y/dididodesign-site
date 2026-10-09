@@ -93,8 +93,8 @@
   .fullindex .wrapx{display:grid;grid-template-columns:minmax(0,1fr) min(34vw,460px);gap:clamp(24px,4vw,64px);padding:0 var(--pad)}
   .fullindex ol{list-style:none}
   .fullindex aside{position:sticky;top:96px;align-self:start;margin-top:14px}
-  .fullindex aside .frame{aspect-ratio:4/5;background:transparent;overflow:hidden;display:flex;align-items:center;justify-content:center}
-  .fullindex aside img{width:100%;height:100%;object-fit:contain;transition:opacity .2s}
+  .fullindex aside .frame{display:flex;align-items:flex-start}
+  .fullindex aside img{width:auto;height:auto;max-width:100%;max-height:72vh;object-fit:contain}
   .fullindex aside p{margin-top:12px;font-size:13px;color:var(--dim);min-height:1.5em}
   @media (hover:none),(max-width:720px){.fullindex .wrapx{grid-template-columns:1fr}.fullindex aside{display:none}}
   .fullindex li a{display:grid;grid-template-columns:4.5em minmax(0,1fr) minmax(0,1.3fr);gap:16px;align-items:baseline;
