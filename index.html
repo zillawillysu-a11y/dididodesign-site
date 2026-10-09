@@ -100,6 +100,11 @@
   .fullindex .go{color:var(--dim);font-size:13px}
   @media (max-width:720px){.fullindex li a{grid-template-columns:3.6em 1fr;gap:2px 12px}.fullindex .sh{grid-column:2}.fullindex .go{display:none}}
 
+  .peek{position:fixed;left:0;top:0;width:auto;height:auto;max-width:min(320px,26vw);max-height:300px;pointer-events:none;z-index:15;opacity:0;
+     transform:translate(-9999px,0);transition:opacity .15s;box-shadow:0 10px 40px rgba(0,0,0,.6)}
+  .peek.on{opacity:1}
+  @media (hover:none),(max-width:720px){.peek{display:none}}
+
   /* ---------- about ---------- */
   .about{display:grid;grid-template-columns:1fr 1fr;gap:var(--pad);padding:clamp(72px,12vh,140px) var(--pad);border-top:1px solid var(--faint)}
   .about h2{font-size:13px;font-weight:400;color:var(--dim)}
@@ -159,6 +164,7 @@
   <section class="fullindex" id="index" aria-label="Index">
     <div class="label"><span>( index )</span><span id="count3"></span></div>
     <ol id="list"></ol>
+    <img class="peek" id="peek" alt="" aria-hidden="true">
   </section>
 
   <section class="artists" aria-label="Artists">
@@ -271,7 +277,7 @@ grid.innerHTML = PROJECTS.map(p => `
     </div>
   </a>`).join('');
 document.getElementById('artists').innerHTML = ARTISTS.map(a=>`<li>${a}</li>`).join('');
-document.getElementById('list').innerHTML = SHOWS.map(([y,a,sh,id])=>`<li><a href="${P}${id}/" target="_blank" rel="noopener"><span class="y">${y}</span><span class="ar">${a}</span><span class="sh">${sh}</span><span class="go">Instagram</span></a></li>`).join('');
+document.getElementById('list').innerHTML = SHOWS.map(([y,a,sh,id])=>`<li><a data-id="${id}" href="${P}${id}/" target="_blank" rel="noopener"><span class="y">${y}</span><span class="ar">${a}</span><span class="sh">${sh}</span><span class="go">Instagram</span></a></li>`).join('');
 document.getElementById('count3').textContent = SHOWS.length + ' shows';
 document.getElementById('count').textContent = SHOWS.length;
 document.getElementById('count2').textContent = PROJECTS.length + ' of ' + SHOWS.length;
@@ -293,6 +299,27 @@ if (hero && (hero.heroImage||hero.images[0])) {
 const nav = document.getElementById('nav'), btn = nav.querySelector('.menu-btn');
 btn.addEventListener('click', () => { const o = nav.classList.toggle('open'); btn.setAttribute('aria-expanded', o); });
 nav.querySelectorAll('ul a').forEach(a => a.addEventListener('click', () => { nav.classList.remove('open'); btn.setAttribute('aria-expanded', false); }));
+
+// hover preview for the full index (desktop only)
+(() => {
+  const peek = document.getElementById('peek');
+  if (!matchMedia('(hover:hover) and (min-width:721px)').matches) return;
+  let preloaded = false;
+  new IntersectionObserver((es, o) => { if (es[0].isIntersecting && !preloaded) { preloaded = true; o.disconnect();
+    SHOWS.forEach(r => { const i = new Image(); i.src = `images/thumbs/${r[3]}.jpg`; }); } }, {rootMargin:'400px'})
+    .observe(document.getElementById('list'));
+  const list = document.getElementById('list');
+  list.addEventListener('mouseover', e => { const a = e.target.closest('a[data-id]'); if (!a) return;
+    peek.src = `images/thumbs/${a.dataset.id}.jpg`; peek.classList.add('on'); });
+  list.addEventListener('mouseleave', () => peek.classList.remove('on'));
+  list.addEventListener('mousemove', e => {
+    const w = peek.offsetWidth || 300, h = peek.offsetHeight || 200;
+    let x = e.clientX + 28, y = e.clientY - h / 2;
+    if (x + w > innerWidth - 12) x = e.clientX - w - 28;
+    y = Math.max(12, Math.min(y, innerHeight - h - 12));
+    peek.style.transform = `translate(${x}px,${y}px)`;
+  });
+})();
 </script>
 </body>
 </html>
